@@ -30,13 +30,15 @@ jobs:
       - name: Fix case-mismatched includes
         run: |
           cd jni
-          find . \( -name '*.cpp' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) | while read f; do
+          find . -type f \( -name '*.cpp' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) | while read -r f; do
             d=$(dirname "$f")
-            grep -oE '#include[[:space:]]*"[^"]+"' "$f" | sed -E 's/.*"([^"]+)"/\1/' | while read inc; do
-              [ -e "$d/$inc" ] && continue
-              [ -e "$inc" ] && continue
-              m=$(find . -iname "$(basename "$inc")" -not -path '*/obj/*' -not -path '*/libs/*' | head -n1)
-              [ -n "$m" ] && ln -sf "$(realpath --relative-to="$d" "$m")" "$d/$inc" 2>/dev/null || true
+            grep -oE '#include[[:space:]]*"[^"]+"' "$f" | sed -E 's/.*"([^"]+)"/\1/' | while read -r inc; do
+              t=$(realpath -m "$d/$inc")
+              [ -e "$t" ] && continue
+              m=$(find "$(pwd)" -type f -iname "$(basename "$inc")" -not -path '*/obj/*' -not -path '*/libs/*' | head -n1)
+              [ -n "$m" ] || continue
+              mkdir -p "$(dirname "$t")"
+              ln -s "$m" "$t"
             done
           done
 
