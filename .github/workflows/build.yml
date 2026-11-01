@@ -24,6 +24,10 @@ jobs:
       - name: Clean old build files
         run: rm -rf obj libs jni/obj jni/libs
 
+      - name: Convert line endings to LF
+        run: |
+          find jni -type f \( -name '*.mk' -o -name '*.cpp' -o -name '*.c' -o -name '*.h' -o -name '*.hpp' \) -exec sed -i 's/\r$//' {} +
+
       - name: Fix case-mismatched includes
         run: |
           cd jni
@@ -39,5 +43,4 @@ jobs:
 
       - name: Build native library
         run: |
-          $NDK/ndk-build NDK_PROJECT_PATH=$GITHUB_WORKSPACE \
-            APP
+          $NDK/ndk-build NDK_PROJECT_PATH=$
