@@ -16,6 +16,9 @@ jobs:
           unzip -q android-ndk-r16b-linux-x86_64.zip -d $HOME
           echo "NDK=$HOME/android-ndk-r16b" >> $GITHUB_ENV
 
+      - name: Clean old build files
+        run: rm -rf obj libs jni/obj jni/libs
+
       - name: Build native library
         run: |
           $NDK/ndk-build NDK_PROJECT_PATH=$GITHUB_WORKSPACE \
