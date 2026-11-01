@@ -10,6 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install libs for old NDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libncurses5 libtinfo5
+
       - name: Download NDK r16b
         run: |
           wget -q https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip
