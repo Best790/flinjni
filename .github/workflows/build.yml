@@ -19,7 +19,6 @@ jobs:
         run: |
           wget -q https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip
           unzip -q android-ndk-r16b-linux-x86_64.zip -d $HOME
-          echo "NDK=$HOME/android-ndk-r16b" >> $GITHUB_ENV
 
       - name: Clean old build files
         run: rm -rf obj libs jni/obj jni/libs
@@ -43,4 +42,12 @@ jobs:
 
       - name: Build native library
         run: |
-          $NDK/ndk-build NDK_PROJECT_PATH=$
+          $HOME/android-ndk-r16b/ndk-build \
+            NDK_PROJECT_PATH="${{ github.workspace }}" \
+            APP_BUILD_SCRIPT="${{ github.workspace }}/jni/Android.mk" \
+            APP_ABI=armeabi-v7a
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libs
+          path: libs/
