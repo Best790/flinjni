@@ -30,7 +30,11 @@ jobs:
       - name: Fix include paths in Android.mk
         run: |
           sed -i 's#^LOCAL_C_INCLUDES := \$(LOCAL_PATH)/vendor/json/json#LOCAL_C_INCLUDES := $(LOCAL_PATH) $(LOCAL_PATH)/app $(LOCAL_PATH)/cryptors $(LOCAL_PATH)/game $(LOCAL_PATH)/game/Custom $(LOCAL_PATH)/game/RW $(LOCAL_PATH)/game/TextRasterizer $(LOCAL_PATH)/graphics $(LOCAL_PATH)/gui $(LOCAL_PATH)/net $(LOCAL_PATH)/util $(LOCAL_PATH)/vendor $(LOCAL_PATH)/vendor/bass $(LOCAL_PATH)/vendor/curl/include $(LOCAL_PATH)/vendor/hash $(LOCAL_PATH)/vendor/hash/bcrypt $(LOCAL_PATH)/vendor/hash/bcrypt/crypt_blowfish $(LOCAL_PATH)/vendor/imgui $(LOCAL_PATH)/vendor/ini $(LOCAL_PATH)/vendor/obfuscate $(LOCAL_PATH)/vendor/openal $(LOCAL_PATH)/vendor/opus $(LOCAL_PATH)/vendor/raknet $(LOCAL_PATH)/vendor/raknet/SAMP $(LOCAL_PATH)/voice $(LOCAL_PATH)/xrtutils $(LOCAL_PATH)/vendor/json/json#' jni/Android.mk
-          grep -n "LOCAL_C_INCLUDES := " jni/Android.mk
+
+      - name: Force-include enet.h
+        run: |
+          sed -i 's#^LOCAL_CPPFLAGS := \(.*\)$#LOCAL_CPPFLAGS := \1 -include $(LOCAL_PATH)/vendor/enet/include/enet.h#' jni/Android.mk
+          grep -n "^LOCAL_CPPFLAGS" jni/Android.mk
 
       - name: Fix case-mismatched includes
         run: |
